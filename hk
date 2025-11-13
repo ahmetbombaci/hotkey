@@ -1,0 +1,307 @@
+#!/usr/bin/env python3
+"""
+hk - Hotkey reference tool
+A fast, searchable personal hotkey and shortcut reference.
+"""
+
+import json
+import sys
+import os
+import re
+from typing import List, Dict, Any
+from pathlib import Path
+
+# ANSI color codes
+class Colors:
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    MAGENTA = '\033[95m'
+    BOLD = '\033[1m'
+    DIM = '\033[2m'
+    RESET = '\033[0m'
+
+def colorize(text: str, color: str) -> str:
+    """Colorize text with ANSI codes."""
+    return f"{color}{text}{Colors.RESET}"
+
+def get_data_file() -> Path:
+    """Get the path to the hotkeys data file."""
+    script_dir = Path(__file__).parent.resolve()
+    return script_dir / "hotkeys.json"
+
+def load_hotkeys() -> List[Dict[str, Any]]:
+    """Load hotkeys from the JSON data file."""
+    data_file = get_data_file()
+
+    if not data_file.exists():
+        print(f"{colorize('Error:', Colors.RED)} Hotkeys data file not found at {data_file}")
+        sys.exit(1)
+
+    try:
+        with open(data_file, 'r') as f:
+            data = json.load(f)
+            return data.get('hotkeys', [])
+    except json.JSONDecodeError as e:
+        print(f"{colorize('Error:', Colors.RED)} Invalid JSON in data file: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"{colorize('Error:', Colors.RED)} Failed to load data: {e}")
+        sys.exit(1)
+
+def fuzzy_match(query: str, text: str) -> bool:
+    """Simple fuzzy matching - checks if query chars appear in order in text."""
+    query = query.lower()
+    text = text.lower()
+    query_idx = 0
+
+    for char in text:
+        if query_idx < len(query) and char == query[query_idx]:
+            query_idx += 1
+
+    return query_idx == len(query)
+
+def search_hotkeys(hotkeys: List[Dict[str, Any]], query: str, fuzzy: bool = True) -> List[Dict[str, Any]]:
+    """Search hotkeys by query string."""
+    query_lower = query.lower()
+    results = []
+
+    for hk in hotkeys:
+        # Search in tool, description, hotkey, category, and example
+        searchable = [
+            hk.get('tool', ''),
+            hk.get('description', ''),
+            hk.get('hotkey', ''),
+            hk.get('category', ''),
+            hk.get('example', '')
+        ]
+
+        searchable_text = ' '.join(searchable).lower()
+
+        # Try exact match first (higher priority)
+        if query_lower in searchable_text:
+            results.append((hk, 1))  # Priority 1 for exact match
+        elif fuzzy and fuzzy_match(query, searchable_text):
+            results.append((hk, 2))  # Priority 2 for fuzzy match
+
+    # Sort by priority
+    results.sort(key=lambda x: x[1])
+    return [r[0] for r in results]
+
+def filter_by_tool(hotkeys: List[Dict[str, Any]], tool: str) -> List[Dict[str, Any]]:
+    """Filter hotkeys by tool name."""
+    tool_lower = tool.lower()
+    return [hk for hk in hotkeys if tool_lower in hk.get('tool', '').lower()]
+
+def get_all_tools(hotkeys: List[Dict[str, Any]]) -> List[str]:
+    """Get a sorted list of all unique tools."""
+    tools = set(hk.get('tool', '') for hk in hotkeys)
+    return sorted(tools)
+
+def format_hotkey(hk: Dict[str, Any], show_tool: bool = True) -> str:
+    """Format a hotkey entry for display."""
+    lines = []
+
+    # Tool and Category
+    if show_tool:
+        tool = colorize(hk.get('tool', 'Unknown'), Colors.CYAN + Colors.BOLD)
+        category = colorize(f"[{hk.get('category', 'General')}]", Colors.DIM)
+        lines.append(f"{tool} {category}")
+    else:
+        category = colorize(f"[{hk.get('category', 'General')}]", Colors.DIM)
+        lines.append(f"{category}")
+
+    # Description
+    description = hk.get('description', 'No description')
+    lines.append(f"  {description}")
+
+    # Hotkey
+    hotkey = colorize(hk.get('hotkey', ''), Colors.GREEN + Colors.BOLD)
+    lines.append(f"  {colorize('→', Colors.YELLOW)} {hotkey}")
+
+    # Example (if present)
+    if 'example' in hk and hk['example']:
+        example = colorize(hk['example'], Colors.DIM)
+        lines.append(f"  {colorize('ℹ', Colors.BLUE)} {example}")
+
+    return '\n'.join(lines)
+
+def display_hotkeys(hotkeys: List[Dict[str, Any]], show_tool: bool = True):
+    """Display a list of hotkeys."""
+    if not hotkeys:
+        print(colorize("No hotkeys found.", Colors.YELLOW))
+        return
+
+    for i, hk in enumerate(hotkeys):
+        if i > 0:
+            print()  # Blank line between entries
+        print(format_hotkey(hk, show_tool))
+
+def show_help():
+    """Display help message."""
+    help_text = f"""
+{colorize('hk', Colors.CYAN + Colors.BOLD)} - Hotkey reference tool
+
+{colorize('USAGE:', Colors.BOLD)}
+  hk                     List all hotkeys (or interactive search if fzf available)
+  hk <query>             Search for hotkeys matching query
+  hk -t <tool>           Show all hotkeys for a specific tool
+  hk --tool <tool>       Show all hotkeys for a specific tool
+  hk -l                  List all available tools
+  hk --list              List all available tools
+  hk -h, --help          Show this help message
+
+{colorize('EXAMPLES:', Colors.BOLD)}
+  hk vim                 Search for vim-related hotkeys
+  hk navigate            Search for navigation hotkeys
+  hk -t "VS Code"        Show all VS Code hotkeys
+  hk clipboard           Search for clipboard operations
+  hk -l                  List all tools with hotkeys
+
+{colorize('FEATURES:', Colors.BOLD)}
+  • Fast fuzzy search across all hotkeys
+  • Organized by tool and category
+  • Includes examples where relevant
+  • Colorized output for better readability
+"""
+    print(help_text)
+
+def try_interactive_search(hotkeys: List[Dict[str, Any]]):
+    """Try to launch interactive search with fzf if available."""
+    import subprocess
+    import shutil
+
+    # Check if fzf is available
+    if not shutil.which('fzf'):
+        # Fallback to listing all hotkeys
+        print(colorize("💡 Tip: Install 'fzf' for interactive search", Colors.YELLOW))
+        print()
+        display_hotkeys(hotkeys)
+        return
+
+    # Prepare hotkey entries for fzf
+    entries = []
+    for hk in hotkeys:
+        tool = hk.get('tool', 'Unknown')
+        category = hk.get('category', 'General')
+        description = hk.get('description', 'No description')
+        hotkey = hk.get('hotkey', '')
+
+        # Format: "Tool [Category] Description → Hotkey"
+        entry = f"{tool} [{category}] {description} → {hotkey}"
+        entries.append((entry, hk))
+
+    # Create input for fzf
+    fzf_input = '\n'.join([e[0] for e in entries])
+
+    try:
+        # Run fzf
+        result = subprocess.run(
+            ['fzf', '--ansi', '--multi', '--reverse', '--preview-window=wrap',
+             '--header=Select hotkey(s) (TAB for multi-select, ENTER to view details)'],
+            input=fzf_input,
+            text=True,
+            capture_output=True
+        )
+
+        if result.returncode == 0:
+            # Find selected hotkeys
+            selected_entries = result.stdout.strip().split('\n')
+            selected_hotkeys = []
+
+            for selected in selected_entries:
+                for entry, hk in entries:
+                    if entry == selected:
+                        selected_hotkeys.append(hk)
+                        break
+
+            if selected_hotkeys:
+                print()
+                display_hotkeys(selected_hotkeys)
+        # If returncode != 0, user cancelled, just exit quietly
+
+    except Exception as e:
+        print(f"{colorize('Error:', Colors.RED)} Failed to run fzf: {e}")
+        print()
+        display_hotkeys(hotkeys)
+
+def main():
+    """Main entry point."""
+    # Load hotkeys
+    hotkeys = load_hotkeys()
+
+    if not hotkeys:
+        print(colorize("No hotkeys found in data file.", Colors.YELLOW))
+        sys.exit(0)
+
+    # Parse arguments
+    args = sys.argv[1:]
+
+    # No arguments - show all or interactive
+    if not args:
+        try_interactive_search(hotkeys)
+        return
+
+    # Help
+    if args[0] in ['-h', '--help', 'help']:
+        show_help()
+        return
+
+    # List tools
+    if args[0] in ['-l', '--list', 'list']:
+        tools = get_all_tools(hotkeys)
+        print(colorize("Available tools:", Colors.BOLD))
+        for tool in tools:
+            count = len([hk for hk in hotkeys if hk.get('tool') == tool])
+            print(f"  • {colorize(tool, Colors.CYAN)} {colorize(f'({count} hotkeys)', Colors.DIM)}")
+        return
+
+    # Filter by tool
+    if args[0] in ['-t', '--tool']:
+        if len(args) < 2:
+            print(f"{colorize('Error:', Colors.RED)} Tool name required")
+            print(f"Usage: hk -t <tool>")
+            sys.exit(1)
+
+        tool_name = ' '.join(args[1:])
+        results = filter_by_tool(hotkeys, tool_name)
+
+        if results:
+            print(colorize(f"Hotkeys for '{tool_name}':", Colors.BOLD))
+            print()
+            display_hotkeys(results, show_tool=False)
+        else:
+            print(f"{colorize('No hotkeys found for:', Colors.YELLOW)} {tool_name}")
+            print()
+            print(colorize('Available tools:', Colors.DIM))
+            for tool in get_all_tools(hotkeys):
+                print(f"  • {tool}")
+        return
+
+    # Search query
+    query = ' '.join(args)
+    results = search_hotkeys(hotkeys, query)
+
+    if results:
+        print(colorize(f"Search results for '{query}':", Colors.BOLD))
+        print()
+        display_hotkeys(results)
+    else:
+        print(f"{colorize('No results found for:', Colors.YELLOW)} {query}")
+        print()
+        print(colorize('💡 Tips:', Colors.DIM))
+        print("  • Try a different search term")
+        print("  • Use 'hk -l' to list all available tools")
+        print("  • Use 'hk' without arguments to browse all hotkeys")
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print()
+        sys.exit(0)
+    except Exception as e:
+        print(f"{colorize('Error:', Colors.RED)} {e}")
+        sys.exit(1)

@@ -1,0 +1,446 @@
+{
+  "hotkeys": [
+    {
+      "tool": "iTerm2",
+      "category": "General",
+      "description": "Command Palette",
+      "hotkey": "Cmd+Shift+O"
+    },
+    {
+      "tool": "iTerm2",
+      "category": "General",
+      "description": "AI Assistant",
+      "hotkey": "Cmd+Shift+Y"
+    },
+    {
+      "tool": "TextMate",
+      "category": "Commands",
+      "description": "Filter Through Command dialog",
+      "hotkey": "Ctrl+Cmd+T",
+      "example": "Use with 'jq .' for JSON formatting"
+    },
+    {
+      "tool": "Terminal",
+      "category": "Navigation",
+      "description": "Clear screen",
+      "hotkey": "Ctrl+L"
+    },
+    {
+      "tool": "Terminal",
+      "category": "Navigation",
+      "description": "Clear line (untype everything)",
+      "hotkey": "Ctrl+U"
+    },
+    {
+      "tool": "Terminal",
+      "category": "Commands",
+      "description": "Execute last command with sudo",
+      "hotkey": "sudo !!"
+    },
+    {
+      "tool": "Terminal",
+      "category": "Commands",
+      "description": "Arguments of previous command",
+      "hotkey": "!$",
+      "example": "mkdir temp\ncd !$"
+    },
+    {
+      "tool": "Terminal",
+      "category": "Process",
+      "description": "Keep program running in background",
+      "hotkey": "nohup <command>",
+      "example": "nohup scp very-big-file.mkv user@host:~/very-big-file.mkv"
+    },
+    {
+      "tool": "Terminal",
+      "category": "System",
+      "description": "List users logged into system",
+      "hotkey": "w"
+    },
+    {
+      "tool": "Terminal",
+      "category": "Search",
+      "description": "Search recursively in subdirectories",
+      "hotkey": "grep -r <search_term> ."
+    },
+    {
+      "tool": "zsh",
+      "category": "General",
+      "description": "List all aliases",
+      "hotkey": "acs"
+    },
+    {
+      "tool": "VS Code",
+      "category": "Navigation",
+      "description": "Navigate back",
+      "hotkey": "Ctrl+-"
+    },
+    {
+      "tool": "VS Code",
+      "category": "Navigation",
+      "description": "Navigate forward",
+      "hotkey": "Ctrl+Shift+-"
+    },
+    {
+      "tool": "VS Code",
+      "category": "Editing",
+      "description": "Duplicate line",
+      "hotkey": "Shift+Option+Down"
+    },
+    {
+      "tool": "VS Code",
+      "category": "Navigation",
+      "description": "Explorer",
+      "hotkey": "Cmd+Shift+E"
+    },
+    {
+      "tool": "VS Code",
+      "category": "Markdown",
+      "description": "Open markdown preview",
+      "hotkey": "Cmd+Shift+V"
+    },
+    {
+      "tool": "VS Code",
+      "category": "Markdown",
+      "description": "Side by side markdown preview",
+      "hotkey": "Cmd+K V"
+    },
+    {
+      "tool": "VS Code",
+      "category": "Git",
+      "description": "Git blame",
+      "hotkey": "Cmd+Ctrl+B"
+    },
+    {
+      "tool": "VS Code",
+      "category": "Editing",
+      "description": "Rename symbol",
+      "hotkey": "F2"
+    },
+    {
+      "tool": "VS Code",
+      "category": "Commands",
+      "description": "Command palette - GitLens: Open File History",
+      "hotkey": "Cmd+Shift+P"
+    },
+    {
+      "tool": "VS Code",
+      "category": "Claude Code",
+      "description": "Quick Launch",
+      "hotkey": "Cmd+Esc"
+    },
+    {
+      "tool": "VS Code",
+      "category": "Claude Code",
+      "description": "Reference files or lines in input",
+      "hotkey": "Cmd+Option+K"
+    },
+    {
+      "tool": "Vim",
+      "category": "Motion",
+      "description": "Sentence backward",
+      "hotkey": "("
+    },
+    {
+      "tool": "Vim",
+      "category": "Motion",
+      "description": "Sentence forward",
+      "hotkey": ")"
+    },
+    {
+      "tool": "Vim",
+      "category": "Motion",
+      "description": "Paragraph backward",
+      "hotkey": "{"
+    },
+    {
+      "tool": "Vim",
+      "category": "Motion",
+      "description": "Paragraph forward",
+      "hotkey": "}"
+    },
+    {
+      "tool": "Vim",
+      "category": "Editing",
+      "description": "Redo",
+      "hotkey": "Ctrl+r"
+    },
+    {
+      "tool": "Vim",
+      "category": "Editing",
+      "description": "Repeat last command/edit",
+      "hotkey": "."
+    },
+    {
+      "tool": "Vim",
+      "category": "Editing",
+      "description": "Undo",
+      "hotkey": "u"
+    },
+    {
+      "tool": "Vim",
+      "category": "Visual",
+      "description": "Visually select entire paragraph",
+      "hotkey": "vip"
+    },
+    {
+      "tool": "Vim",
+      "category": "Navigation",
+      "description": "Go to previous line position",
+      "hotkey": "``",
+      "example": "Switch between last two positions"
+    },
+    {
+      "tool": "Vim",
+      "category": "Mode",
+      "description": "Exit insert mode (alternative to Esc)",
+      "hotkey": "Ctrl+[",
+      "example": "Escape is far away, use Ctrl+[ or Alt+h/j/k/l"
+    },
+    {
+      "tool": "Vim",
+      "category": "Mode",
+      "description": "Exit insert mode and move",
+      "hotkey": "Alt+h/j/k/l",
+      "example": "Alt+o opens new line, Alt+A appends to end, Alt+p pastes, Alt+k moves up"
+    },
+    {
+      "tool": "Vim",
+      "category": "Formatting",
+      "description": "Enable paste mode (prevent auto-indent)",
+      "hotkey": ":set paste"
+    },
+    {
+      "tool": "Vim",
+      "category": "Formatting",
+      "description": "Disable paste mode",
+      "hotkey": ":set nopaste"
+    },
+    {
+      "tool": "Vim",
+      "category": "Editing",
+      "description": "Increment number under cursor",
+      "hotkey": "Ctrl+a"
+    },
+    {
+      "tool": "Vim",
+      "category": "Editing",
+      "description": "Decrement number under cursor",
+      "hotkey": "Ctrl+x"
+    },
+    {
+      "tool": "Vim",
+      "category": "Motion",
+      "description": "Move to wrapped line below",
+      "hotkey": "gj"
+    },
+    {
+      "tool": "Vim",
+      "category": "Motion",
+      "description": "Move to wrapped line above",
+      "hotkey": "gk"
+    },
+    {
+      "tool": "Vim",
+      "category": "Motion",
+      "description": "Go to first char of wrapped line",
+      "hotkey": "g0"
+    },
+    {
+      "tool": "Vim",
+      "category": "Motion",
+      "description": "Go to last char of wrapped line",
+      "hotkey": "g$"
+    },
+    {
+      "tool": "Vim",
+      "category": "Formatting",
+      "description": "Format long line into multiple lines",
+      "hotkey": "gq"
+    },
+    {
+      "tool": "Vim",
+      "category": "Editing",
+      "description": "Lowercase text",
+      "hotkey": "gu"
+    },
+    {
+      "tool": "Vim",
+      "category": "Editing",
+      "description": "Uppercase text",
+      "hotkey": "gU"
+    },
+    {
+      "tool": "Vim",
+      "category": "Editing",
+      "description": "Toggle case of character",
+      "hotkey": "~"
+    },
+    {
+      "tool": "Vim",
+      "category": "Editing",
+      "description": "Toggle case of selection",
+      "hotkey": "g~"
+    },
+    {
+      "tool": "Vim",
+      "category": "Navigation",
+      "description": "Open highlighted text as file",
+      "hotkey": "gf",
+      "example": "Press Ctrl+^ to return back"
+    },
+    {
+      "tool": "Vim",
+      "category": "Visual",
+      "description": "Reselect previous selection",
+      "hotkey": "gv"
+    },
+    {
+      "tool": "Vim",
+      "category": "Editing",
+      "description": "Join lines without spaces",
+      "hotkey": "gJ"
+    },
+    {
+      "tool": "Vim",
+      "category": "Editing",
+      "description": "Rerun substitute for all lines",
+      "hotkey": "g&"
+    },
+    {
+      "tool": "Vim",
+      "category": "Tabs",
+      "description": "Go to next tab",
+      "hotkey": "gt"
+    },
+    {
+      "tool": "Vim",
+      "category": "Tabs",
+      "description": "Go to previous tab",
+      "hotkey": "gT"
+    },
+    {
+      "tool": "Vim",
+      "category": "Tabs",
+      "description": "Edit file in new tab",
+      "hotkey": ":tabedit <file>"
+    },
+    {
+      "tool": "Vim",
+      "category": "Windows",
+      "description": "Horizontal split",
+      "hotkey": ":split or :sp"
+    },
+    {
+      "tool": "Vim",
+      "category": "Windows",
+      "description": "Vertical split",
+      "hotkey": ":vsplit or :vs"
+    },
+    {
+      "tool": "Vim",
+      "category": "Windows",
+      "description": "Switch between splits",
+      "hotkey": "Ctrl+w Ctrl+w",
+      "example": "Or use Ctrl+w+[hjkl] for directional movement"
+    },
+    {
+      "tool": "Vim",
+      "category": "Clipboard",
+      "description": "Copy to system clipboard",
+      "hotkey": "\"+y"
+    },
+    {
+      "tool": "Vim",
+      "category": "Clipboard",
+      "description": "Display registers",
+      "hotkey": ":reg"
+    },
+    {
+      "tool": "Vim",
+      "category": "Info",
+      "description": "Show ASCII value of character",
+      "hotkey": ":as or :ascii or ga"
+    },
+    {
+      "tool": "Vim",
+      "category": "Info",
+      "description": "Show UTF-8 info",
+      "hotkey": "g8"
+    },
+    {
+      "tool": "Vim",
+      "category": "Search",
+      "description": "Search for special char by hex",
+      "hotkey": "/%x<hex>",
+      "example": "/%x1b for ESC (hex 1b)"
+    },
+    {
+      "tool": "Vim",
+      "category": "Terminal",
+      "description": "Open terminal in Vim",
+      "hotkey": ":terminal"
+    },
+    {
+      "tool": "Vim",
+      "category": "Files",
+      "description": "Save file that needs sudo",
+      "hotkey": ":w !sudo tee %"
+    },
+    {
+      "tool": "Vim",
+      "category": "Security",
+      "description": "Password protect file",
+      "hotkey": ":X or vim +X <filename>"
+    },
+    {
+      "tool": "Vim",
+      "category": "Folding",
+      "description": "Toggle current fold",
+      "hotkey": "za"
+    },
+    {
+      "tool": "Vim",
+      "category": "Folding",
+      "description": "Expand all folds",
+      "hotkey": "zR"
+    },
+    {
+      "tool": "Vim",
+      "category": "Files",
+      "description": "Save and quit",
+      "hotkey": ":wq"
+    },
+    {
+      "tool": "Vim",
+      "category": "Files",
+      "description": "Quit without saving",
+      "hotkey": ":q!"
+    },
+    {
+      "tool": "Vim",
+      "category": "Navigation",
+      "description": "Go to end of file",
+      "hotkey": "G"
+    },
+    {
+      "tool": "Vim",
+      "category": "Search",
+      "description": "Search for text",
+      "hotkey": "/<search_term>",
+      "example": "/ahmet to search for 'ahmet'"
+    },
+    {
+      "tool": "Vim",
+      "category": "Search",
+      "description": "Next search result",
+      "hotkey": "n"
+    },
+    {
+      "tool": "Vim",
+      "category": "Editing",
+      "description": "Delete line",
+      "hotkey": "dd"
+    }
+  ]
+}
