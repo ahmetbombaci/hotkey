@@ -29,7 +29,8 @@ def colorize(text: str, color: str) -> str:
 
 def get_data_file() -> Path:
     """Get the path to the hotkeys data file."""
-    script_dir = Path(__file__).parent.resolve()
+    # Resolve symlinks first, then get parent directory
+    script_dir = Path(__file__).resolve().parent
     return script_dir / "hotkeys.json"
 
 def load_hotkeys() -> List[Dict[str, Any]]:
