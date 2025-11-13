@@ -131,6 +131,12 @@
     },
     {
       "tool": "VS Code",
+      "category": "Zen",
+      "description": "Activates Zen Mode -- double ESC to quit",
+      "hotkey": "Cmd+K Z"
+    },
+    {
+      "tool": "VS Code",
       "category": "Claude Code",
       "description": "Reference files or lines in input",
       "hotkey": "Cmd+Option+K"
